@@ -1,12 +1,17 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { TRANSCODE_QUEUE } from './constant/constant';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 
 @Injectable()
 export class AppService {
   constructor(
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
+    @InjectQueue(TRANSCODE_QUEUE)
+    private readonly transcodeQueue: Queue
   ) {}
 
   async getHello() {
@@ -32,5 +37,12 @@ export class AppService {
       message: 'Hello World!',
       data: cached,
     };
+  }
+
+  async transcode() {
+    await this.transcodeQueue.add({
+      filename: './file.mp3'
+    }, {});
+    return "transcode"
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
@@ -12,5 +12,10 @@ export class AppController {
   @CacheTTL(60)
   async getHello() {
     return this.appService.getHello();
+  }
+
+  @Post('transcode')
+  async transcode() {
+    return this.appService.transcode();
   }
 }
